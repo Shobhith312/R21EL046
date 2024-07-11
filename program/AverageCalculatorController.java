@@ -1,30 +1,26 @@
-public class AverageCalculatorController {
+public class PrimeNumbersInArray {
 
-    private final NumberService numberService;
-    private final DoubleLinkedList<Double> numbers = new DoubleLinkedList<>();
-    private final int windowSize;
-
-    public AverageCalculatorController(NumberService numberService, @Value("${window.size}") int windowSize) {
-        this.numberService = numberService;
-        this.windowSize = windowSize;
+    public static void main(String[] args) {
+        int[] numbers = {10, 15, 3, 7, 5, 20, 2, 11, 13, 16, 17, 19};
+        
+        System.out.println("Prime numbers in the array are:");
+        for (int number : numbers) {
+            if (isPrime(number)) {
+                System.out.print(number + " ");
+            }
+        }
     }
 
-    @GetMapping("/{numberType}")
-    public ResponseEntity<AverageResponse> getAverage(@PathVariable String numberType) throws Exception {
-        List<Double> fetchedNumbers = numberService.getNumbers(numberType);
-        numbers.addAll(fetchedNumbers);
-        if (numbers.size() > windowSize) {
-            numbers.removeFirst();
+    
+    public static boolean isPrime(int num) {
+        if (num <= 1) {
+            return false;
         }
-        double average = calculateAverage(numbers);
-        return ResponseEntity.ok(new AverageResponse(fetchedNumbers, numbers.toList(), average));
-    }
-
-    private double calculateAverage(DoubleLinkedList<Double> numbers) {
-        double sum = 0;
-        for (Double number : numbers) {
-            sum += number;
+        for (int i = 2; i <= Math.sqrt(num); i++) {
+            if (num % i == 0) {
+                return false;
+            }
         }
-        return sum / numbers.size();
+        return true;
     }
 }
